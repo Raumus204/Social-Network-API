@@ -19,8 +19,7 @@ import { User } from '../models/User.js';
       if (!user) {
         return res.status(404).json({ message: 'No user with that ID' });
       }
-      res.json(user);
-      return;
+      return res.json(user);
     } catch (err) {
       res.status(500).json(err);
       return;
@@ -48,9 +47,9 @@ import { User } from '../models/User.js';
         if (!user) {
           return res.status(404).json({ message: 'No user with that ID' });
         }
-        res.json(user);
+        return res.json(user);
         } catch (err) {
-            res.status(500).json(err);
+            return res.status(500).json(err);
         }
     }
 
@@ -60,14 +59,48 @@ import { User } from '../models/User.js';
         const user = await User.findByIdAndDelete(
             req.params.userId,
             req.body,
+        );
+        if (!user) {
+          return res.status(404).json({ message: 'No user with that ID' });
+        }
+        await Thought.deleteMany({ _id: { $in: user.thoughts } }); // the $in operator selects the documents where the value of a field equals any value in the specified array
+        return res.json({message: 'User and associated thoughts deleted.'});
+        } catch (err) {
+            return res.status(500).json(err);
+        }
+    }
+
+    // Add a friend
+    export const addFriend = async (req: Request, res: Response) => {
+      try {
+        const user = await User.findByIdAndUpdate(
+            req.params.userId,
+            { $push: { friends: req.params.friendId } },
             { new: true }
         );
         if (!user) {
           return res.status(404).json({ message: 'No user with that ID' });
         }
-        await Thought.deleteMany({ _id: { $in: user.thoughts } });
-        res.json({message: 'User and associated thoughts deleted.'});
+        return res.json(user);
         } catch (err) {
-            res.status(500).json(err);
+            return res.status(500).json(err);
+        }
+    }
+
+    // Remove a friend
+    export const removeFriend = async (req: Request, res: Response) => {
+      try {
+        const user = await User.findByIdAndUpdate(
+            req.params.userId,
+            { $pull: { friends: req.params.friendId } },
+            { new: true }
+        );
+        if (!user) {
+          return res.status(404).json({ message: 'No user with that ID' });
+        }
+        return res.json(user);
+        }
+        catch (err) {
+            return res.status(500).json(err);
         }
     }
