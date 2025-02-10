@@ -1,5 +1,5 @@
 import { Schema, model, type Document } from 'mongoose';
-import { reactionSchema, IReaction } from './Reaction';
+import { Reaction, IReaction } from './Reaction.js';
 
 interface IThought extends Document {
     thoughtText: string;
@@ -19,13 +19,13 @@ const thoughtSchema = new Schema<IThought>(
         createdAt: {
             type: Date,
             default: Date.now,
-            get: (timestamp: number) => new Date(timestamp).toLocaleString(),
+            get: (timestamp: number) => new Date(timestamp), //.toLocaleString(),
         },
         username: {
             type: String,
             required: true,
         },
-        reactions: [reactionSchema],
+        reactions: [Reaction],
     },
     {
         toJSON: {
@@ -36,7 +36,7 @@ const thoughtSchema = new Schema<IThought>(
     }
 );
 
-thoughtSchema.virtual('reactionCount').get(function () {
+thoughtSchema.virtual('reactionCount').get(function (this: IThought) {
     return this.reactions.length;
 });
 

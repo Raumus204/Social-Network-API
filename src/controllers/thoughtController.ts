@@ -17,9 +17,9 @@ export const getSingleThought = async (req: Request, res: Response) => {
     if (!thought) {
       return res.status(404).json({ message: 'No thought with that ID' });
     }
-    res.json(thought);
+    return res.json(thought);
   } catch (err) {
-    res.status(500).json(err);
+    return res.status(500).json(err);
   }
 }
 
@@ -33,9 +33,9 @@ export const createThought = async (req: Request, res: Response) => {
     if (!user) {
       return res.status(404).json({ message: 'No user with that ID' });
     }
-    res.json(thought);
+      return res.json(thought);
     } catch (err) {
-        res.status(500).json(err);
+      return res.status(500).json(err);
     }
 }
 
@@ -49,9 +49,9 @@ export const updateThought = async (req: Request, res: Response) => {
     if (!thought) {
       return res.status(404).json({ message: 'No thought with that ID' });
     }
-    res.json(thought);
+      return res.json(thought);
     } catch (err) {
-        res.status(500).json(err);
+      return res.status(500).json(err);
     }
 }
 
@@ -68,8 +68,8 @@ export const deleteThought = async (req: Request, res: Response) => {
     if (!user) {
       return res.status(404).json({ message: 'No user with that ID' });
     }
-    res.json(thought);
+      return res.json(thought);
     } catch (err) {
-        res.status(500).json(err);
+      return res.status(500).json(err);
     }
 }
